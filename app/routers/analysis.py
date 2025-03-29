@@ -97,3 +97,25 @@ async def generate_recommendations(
             user_msg="Failed to generate recommendations",
             error=str(e),
         )
+    
+@router.post('/generate_report')
+async def generate_report(
+    report_type: str,
+    user: BusinessUser = Depends(get_current_user),
+    ai_service: AIService = Depends(AIService),  
+):
+    data = user.user_files[0].file_url
+    try:
+        # Generate report based on historical financial data and report type
+        report = ai_service.create_report(data, report_type)
+
+        return send_data_with_info(
+            data=report,
+            status_code=200,
+            info=f"AI Service generated {report_type} report successfully"
+        )
+    except Exception as e:
+        return internal_server_error(
+            user_msg=f"Failed to generate {report_type} report",
+            error=str(e),
+        )

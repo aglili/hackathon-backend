@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from app.config.settings import settings
+from app.helpers.report_types import return_report
 
 client = instructor.from_groq(Groq(api_key=settings.GROQ_API_KEY))
 
@@ -89,13 +90,13 @@ class AIService():
         forecast = model_fit.forecast(steps=periods)
         
         # Create DataFrame for predictions
-        forecast_dates = pd.date_range(start=data.index[-1], periods=periods+1, freq='M')[1:]
+        forecast_dates = pd.date_range(start=data.index[-1], periods=periods+1, freq='M')[1:].strftime('%Y-%m-%d').tolist()
         forecast_df = pd.DataFrame({'Date': forecast_dates, 'Predicted_Revenue': forecast.values})
     
 
 
         return {
-            "date": forecast_dates.to_list(),
+            "date": forecast_dates,
             "predicted_revenue": list(forecast),
             "actual_revenue": data['Revenue'].to_list(),
         }
@@ -199,4 +200,22 @@ class AIService():
         return response
     
     def create_report(self, data_str: str, report_type):
-        pass 
+        data = pd.read_csv(data_str)
+        report_instance = return_report(data, report_type)
+
+        report = client.chat.completions.create(
+            messages=[
+                        {
+                                "role": "system",
+                                "content": report_instance['system_prompt'],
+                        },{
+                                "role": "user",
+                                "content": report_instance.user_prompt
+                        }
+                ],
+                model='llama3-8b-8192',
+                temperature=0.7,
+                response_model=report_instance['response_model']
+        )
+
+        return report 
