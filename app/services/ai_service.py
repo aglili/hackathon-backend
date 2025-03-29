@@ -10,14 +10,14 @@ from statsmodels.tsa.arima.model import ARIMA
 from app.config.settings import settings
 from app.helpers.report_types import return_report
 from fastapi import Depends
-from app.repository.reports_repository import ReportRepository
+from app.repository.reports_repository import ReportsRepository
 from app.schemas.reports_schema import CreateReport
 
 client = instructor.from_groq(Groq(api_key=settings.GROQ_API_KEY))
 
 
 class AIService():
-    def __init__(self,repository: ReportRepository = Depends(ReportRepository)):
+    def __init__(self,repository: ReportsRepository = Depends(ReportsRepository)):
         self.repository = repository
         super().__init__(repository)
 
@@ -187,7 +187,7 @@ class AIService():
 
     async def generate_smart_profile(self, data_str: str):
         data = pd.read_csv(data_str)
-        ratios = self.generate_financial_ratios(data)
+        ratios = await self.generate_financial_ratios(data)
         try:
             prompt = f"""
             Based on the financial ratios of the company {ratios}, consolidate the ratios and generate a score between 1 and 10 to represent.
@@ -271,7 +271,7 @@ class AIService():
                 response_model=report_instance['response_model']
         )
 
-        self.repository.create(CreateReport(
+        await self.repository.create(CreateReport(
             user_id=str(user.id),
             report_type=report_type,
             report_data= report.dict(),
