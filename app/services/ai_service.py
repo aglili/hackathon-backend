@@ -19,7 +19,7 @@ class AIService():
 
     
 
-    def generate_expense_data(self, data_str: str):
+    async def generate_expense_data(self, data_str: str):
         try:
             data = pd.read_csv(data_str)
             # Prepare analysis prompt
@@ -85,7 +85,7 @@ class AIService():
             print('error: ', e)
 
 
-    def generate_expense_summary(self, expense):
+    async def generate_expense_summary(expense):
         try:
             prompt = f"""
             Given the expense propoertions {expense}. generate a short report summary essay explaining the expense report
@@ -111,7 +111,7 @@ class AIService():
 
 
 
-    def forecast_revenue(self, data_str: str, periods=6):
+    async def forecast_revenue(self, data_str: str, periods=6):
         """
         Forecast future revenue using ARIMA time series model.
 
@@ -150,7 +150,7 @@ class AIService():
             "actual_revenue": data['Revenue'].to_list(),
         }
 
-    def generate_financial_ratios(self, data_str: str):
+    async def generate_financial_ratios(self, data_str: str):
         try:
             data = pd.read_csv(data_str)
             prompt = f"""
@@ -181,7 +181,7 @@ class AIService():
         except Exception as e:
             print('error: ', e)
 
-    def generate_smart_profile(self, data_str: str):
+    async def generate_smart_profile(self, data_str: str):
         data = pd.read_csv(data_str)
         ratios = self.generate_financial_ratios(data)
         try:
@@ -216,7 +216,7 @@ class AIService():
         except Exception as e:
             print('error: ', e)
 
-    def generate_score_improvement_recommendations(self, data_str: str):
+    async def generate_score_improvement_recommendations(self, data_str: str):
         data = pd.read_csv(data_str)
         risk_data = self.generate_financial_ratios(data)
         prompt = f"""
@@ -248,7 +248,7 @@ class AIService():
         )
         return response
     
-    def create_report(self, data_str: str, report_type):
+    async def create_report(self, data_str: str, report_type):
         data = pd.read_csv(data_str)
         report_instance = return_report(report_type, data)
 
