@@ -34,8 +34,8 @@ class SmartProfile(BaseModel):
     smart_save_index: float = Field(description=" a score between 0 and 850 representing the risk assessment score of the business")
 
 class ScoreImprovementRecommendations(BaseModel):
-    liquidity_management = Field(description="Improve cash flow and ensure you have enough money to cover short-term expenses.")
-    capital_structure_optimization = Field(description="Balance debt and equity to keep your business financially stable.")
-    profitability_enhancements = Field(description="Increase profits by boosting revenue and cutting unnecessary costs.")
-    operational_efficiency = Field(description="Streamline operations to reduce waste and improve productivity.")
-    debt_management_risk_control = Field(description="Manage debt wisely to avoid financial stress and ensure stability.")
+    liquidity_management: str = Field(description="Improve cash flow and ensure you have enough money to cover short-term expenses.")
+    capital_structure_optimization: str = Field(description="Balance debt and equity to keep your business financially stable.")
+    profitability_enhancements: str = Field(description="Increase profits by boosting revenue and cutting unnecessary costs.")
+    operational_efficiency: str = Field(description="Streamline operations to reduce waste and improve productivity.")
+    debt_management_risk_control: str = Field(description="Manage debt wisely to avoid financial stress and ensure stability.")
