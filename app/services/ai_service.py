@@ -98,7 +98,7 @@ class AIService():
                 response_model=ExpenseSummary
             )
 
-            return summary
+            return summary.summary
         except Exception as e:
             print('error: ', e)
 
