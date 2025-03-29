@@ -41,6 +41,11 @@ class Settings(BaseSettings):
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
     DATE_FORMAT: str = "%Y-%m-%d"
 
+
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL")
+    SUPABASE_KEY: str = os.getenv("SUPABASE_KEY")
+    BUCKET_NAME: str = os.getenv("BUCKET_NAME")
+
     class Config:
         case_sensitive = True
         env_file = ".env"

@@ -4,8 +4,9 @@ from app.config.settings import settings
 from app.core.exceptions import InvalidOperationError
 from app.helpers import messages
 from app.core.security import hash_password
-from app.helpers.enums import BusinessType, BusinessIndustry
+from app.helpers.enums import BusinessType, BusinessIndustry,RevenueRange
 import datetime
+from typing import Optional
 
 
 
@@ -29,6 +30,17 @@ class BusinessUserSignInRequest(BaseModel):
 
 
 
+class UserFilesBase(BaseModel):
+    file_name: str
+    file_url: str
+
+
+class FullFile(UserFilesBase):
+    user_id: str
+
+
+
+
 class BusinessUserCompleteOnboardingRequest(BaseModel):
     business_name: str
     business_type: BusinessType
@@ -36,6 +48,10 @@ class BusinessUserCompleteOnboardingRequest(BaseModel):
     registration_date: datetime.date
     location: str
     no_of_employees: int
+    in_debt: bool
+    revenue_range: RevenueRange
+    debt_range: Optional[RevenueRange] = None
+    files : Optional[list[UserFilesBase]] = None
 
     # @field_validator("registration_date")
     # @classmethod

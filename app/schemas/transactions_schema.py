@@ -15,4 +15,5 @@ class CreateTransactionRequestPartial(BaseModel):
 
 class CreateTransactionRequest(CreateTransactionRequestPartial):
     user_id: str
-    
+
+

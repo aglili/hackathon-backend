@@ -1,7 +1,8 @@
 from app.services.base_service import BaseService
 from app.repository.business_user_repository import BusinessUserRepository
+from app.repository.user_files_repository import UserFilesRepository
 from fastapi import Depends
-from app.schemas.user_authentication import BusinessUserSignUpRequest,BusinessUserSignInRequest,BusinessUserCompleteOnboardingRequest
+from app.schemas.user_authentication import BusinessUserSignUpRequest,BusinessUserSignInRequest,BusinessUserCompleteOnboardingRequest,FullFile
 from app.core.exceptions import InvalidOperationError
 from app.helpers.transformers.business_user_transformers import transform_user_to_dict
 from app.core.security import generate_access_token,verify_password
@@ -9,8 +10,9 @@ from app.helpers import messages
 from app.models.business_user import BusinessUser
 
 class BusinessUserService(BaseService):
-    def __init__(self, repository: BusinessUserRepository = Depends(BusinessUserRepository)) -> None:
+    def __init__(self, repository: BusinessUserRepository = Depends(BusinessUserRepository),files_repository :UserFilesRepository = Depends(UserFilesRepository) ) -> None:
         self.repository = repository
+        self.files_repository = files_repository
         super().__init__(repository)
 
 
@@ -61,6 +63,17 @@ class BusinessUserService(BaseService):
     async def complete_onboarding_user(self,user: BusinessUser,payload: BusinessUserCompleteOnboardingRequest) -> dict:
         try:
             user = await self.repository.update(user.id,payload)
+
+            files = payload.files
+            if files:
+                for file in files:
+                    await self.files_repository.create(
+                        FullFile(
+                            user_id=user.id,
+                            file_name=file.file_name,
+                            file_url=file.file_url
+                        )
+                    )
 
             user_data = transform_user_to_dict(user=user)
 
