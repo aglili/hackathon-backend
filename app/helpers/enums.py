@@ -63,3 +63,15 @@ class RevenueRange(str, Enum):
     BETWEEN_100K_AND_500K = "Between GHS 100,000 and GHS 500,000"
     BETWEEN_500K_AND_1M = "Between GHS 500,000 and GHS 1,000,000"
     MORE_THAN_1M = "More than GHS 1,000,000"
+
+
+
+
+class ReportType(str,Enum):
+    """
+    Enum for report types.
+    """
+    PROFIT_LOSS = "profit_loss"
+    CASH_FLOW = "cash_flow"
+    INCOME = "income"
+    EXPENSE = "expense"
