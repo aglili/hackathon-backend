@@ -27,13 +27,13 @@ class AIService():
             Analyze this business financial data:
             {data}
             
-            Categorize expenses uner these 4 areas
+            Categorize expenses under these 4 areas and return a list of all the amount spent on each category
             - Utilities
             - Rent
             - Payroll
             - Equipment
 
-            for each of these categories, sum up how much was spent on that category
+            for each of these categories, return a list of all the amount spent on that category
             
             Return ONLY the structured JSON format with numerical values. DO NOT RETURN ANY CALCULTAIONS. This is CRITICAL
             """
@@ -43,14 +43,14 @@ class AIService():
                 messages=[
                         {
                                 "role": "system",
-                                "content": "You're a senior analysed tasked with expense categorization and aggregation. RETURN ONLY A STRUCTURED JSON"
+                                "content": "You're tasked with returning a list of money spent on certain expense categories. RETURN ONLY A STRUCTURED JSON"
                         },{
                                 "role": "user",
                                 "content": prompt
                         }
                 ],
                 model='llama3-8b-8192',
-                temperature=0.2,
+                temperature=0,
                 response_model=Expense
             )
 
@@ -58,20 +58,27 @@ class AIService():
 
             print(analysis)
 
-            total = sum(analysis.values())
+            results = {}
+
+            for key in analysis.keys():
+                 results[key] = sum(analysis[key])
+
+            total = sum(results.values())
+
+            print('total: %d' % total)
     
-            # if total == 0:
-            #     return {
-            #         category: {"amount": 0.0, "percentage": 0.0}
-            #         for category in analysis
-            #     }
+            if total == 0:
+                return {
+                    category: {"amount": 0.0, "percentage": 0.0}
+                    for category in analysis
+                }
             
             return {
                 category: {
                     "amount": str(amount),
                     "percentage": str(round((amount / total) * 100, 2))
                 }
-                for category, amount in analysis.items()
+                for category, amount in results.items()
             }
 
         except Exception as e:

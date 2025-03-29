@@ -8,10 +8,10 @@ class ExpenseData(BaseModel):
     amount: float = Field(..., description="Amount spent on the given category")
 
 class Expense(BaseModel):
-    utilities: float = Field(description="the amount spent on utilities")
-    rent: float = Field(description="the amount spent on rent")
-    payroll: float = Field(description="the amount spent on payroll")
-    equipment: float = Field(description="the amount spent on equipment")
+    utilities: List[float] = Field(description="a list of the amounts spent on utilities")
+    rent: List[float] = Field(description="a list of the amounts spent on rent")
+    payroll: List[float] = Field(description="a list of the amounts spent on payroll")
+    equipment: List[float] = Field(description="a list of the amounts spent on equipment")
 
 class CashFlow(BaseModel):
     date: datetime = Field(description="date of the cash flow")
