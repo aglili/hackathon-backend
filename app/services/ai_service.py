@@ -176,7 +176,7 @@ class AIService(BaseService):
         - Profitability Enhancement
         - Operational Efficiency
         - Debt Management & Risk Control
-        avoid using jargon and write out your recommendations for each section in a way a normal business owner would understand
+        avoid using jargon and write out your recommendations for each section in a way a normal business owner would understand. make it very detailed but also simple
 
         Return ONLY the structured JSON format with numerical values (no calculations in fields).
         """

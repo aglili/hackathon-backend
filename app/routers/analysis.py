@@ -76,3 +76,24 @@ async def generate_smart_index(
            user_msg="Failed to generate smart index",
            error=str(e),
        )
+   
+@router.post('/recommendations')
+async def generate_recommendations(
+    user: BusinessUser = Depends(get_current_user),
+    ai_service: AIService = Depends(AIService),
+):
+    data = user.user_files[0].file_url
+    try:
+        # Generate recommendations based on historical financial data
+        recommendations = ai_service.generate_recommendations(data)
+
+        return send_data_with_info(
+            data=recommendations,
+            status_code=200,
+            info="AI Service generated recommendations successfully"
+        )
+    except Exception as e:
+        return internal_server_error(
+            user_msg="Failed to generate recommendations",
+            error=str(e),
+        )
