@@ -69,7 +69,7 @@ class BusinessUserService(BaseService):
                 for file in files:
                     await self.files_repository.create(
                         FullFile(
-                            user_id=user.id,
+                            user_id=str(user.id),
                             file_name=file.file_name,
                             file_url=file.file_url
                         )
