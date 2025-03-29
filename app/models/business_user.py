@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.helpers.enums import BusinessType, BusinessIndustry, RevenueRange
 from sqlalchemy.orm import relationship
 from app.models.transactions import Transactions
-
+from app.models.reports import Businessreports
 
 class BusinessUser(BaseModel):
     __tablename__ = "business_users"
