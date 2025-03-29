@@ -4,6 +4,7 @@ from app.models.business_user import BusinessUser
 from app.core.dependencies import get_current_user
 from app.services.ai_service import AIService
 from app.routers.responses import send_data_with_info, client_side_error, internal_server_error
+from app.helpers.enums import ReportType
 
 router = APIRouter(
     prefix="/ai_service",
@@ -104,14 +105,16 @@ async def generate_recommendations(
     
 @router.post('/generate_report')
 async def generate_report(
-    report_type: str,
+    report_type: ReportType,
     user: BusinessUser = Depends(get_current_user),
     ai_service: AIService = Depends(AIService),  
 ):
     data = user.user_files[0].file_url
     try:
         # Generate report based on historical financial data and report type
-        report = await ai_service.create_report(data, report_type)
+        report = await ai_service.create_report(data, report_type,user)
+
+        # get id, report
 
         return send_data_with_info(
             data=report,

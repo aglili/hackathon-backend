@@ -23,7 +23,7 @@ class BusinessUser(BaseModel):
 
     transactions = relationship("Transactions", back_populates="business_user")
     user_files = relationship("UserFiles", back_populates="business_user")  # Fixed missing relationship
-
+    reports = relationship("Businessreports", back_populates="business_user")
 
 class UserFiles(BaseModel):
     __tablename__ = "user_files"
