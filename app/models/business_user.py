@@ -1,14 +1,14 @@
 from app.models.base_model import BaseModel
-from sqlalchemy import Column, String,Integer,Enum,Date,Boolean,ForeignKey
+from sqlalchemy import Column, String, Integer, Enum, Date, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from app.helpers.enums import BusinessType,BusinessIndustry,RevenueRange
+from app.helpers.enums import BusinessType, BusinessIndustry, RevenueRange
 from sqlalchemy.orm import relationship
 from app.models.transactions import Transactions
 
 
-
 class BusinessUser(BaseModel):
     __tablename__ = "business_users"
+
     business_name = Column(String, nullable=True)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
@@ -22,22 +22,14 @@ class BusinessUser(BaseModel):
     debt_range = Column(Enum(RevenueRange), nullable=True)
 
     transactions = relationship("Transactions", back_populates="business_user")
-
-    
-
-
-
+    user_files = relationship("UserFiles", back_populates="business_user")  # Fixed missing relationship
 
 
 class UserFiles(BaseModel):
     __tablename__ = "user_files"
+
     file_name = Column(String, nullable=False)
     file_url = Column(String, nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('business_users.id'), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("business_users.id", ondelete="CASCADE"), nullable=False)
 
     business_user = relationship("BusinessUser", back_populates="user_files")
-
-
-
-
-
