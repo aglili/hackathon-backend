@@ -113,3 +113,7 @@ class IncomeReport(BaseModel):
     net_profit: float = Field(..., description="Final profit after all deductions")
     yoy_growth: float = Field(..., description="Year-over-year total revenue change percentage")
     industry_benchmark: Optional[float] = Field(None, description="Sector average for comparison")
+
+
+class ExpenseSummary(BaseModel):
+    summary: str = Field(..., description="Summary report of expenses")

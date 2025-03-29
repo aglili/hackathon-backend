@@ -20,8 +20,13 @@ async def generate_expenses(
         data_file = user.user_files[0].file_url
         response = ai_service.generate_expense_data(data_file) 
 
+        summary = ai_service.generate_expense_summary(response)
+
         return send_data_with_info(
-            data=response,
+            data={
+                "expenses": response,
+                "summary": summary
+            },
             status_code=200,
             info="AI Service generated expense data successfully"
         )
@@ -60,7 +65,6 @@ async def generate_smart_index(
     user: BusinessUser = Depends(get_current_user),
     ai_service: AIService = Depends(AIService),
 ):
-   
    data = user.user_files[0].file_url
    try:
        # Generate smart index based on historical financial data

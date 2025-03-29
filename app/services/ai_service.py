@@ -2,7 +2,7 @@ from app.services.base_service import BaseService
 from groq import Groq 
 import pandas as pd 
 import instructor
-from app.schemas.ai_schema import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations
+from app.schemas.ai_schema import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations, ExpenseSummary
 from sklearn.ensemble import IsolationForest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -35,7 +35,7 @@ class AIService():
 
             for each of these categories, sum up how much was spent on that category
             
-            Return ONLY the structured JSON format with numerical values. DO NOT RETURN ANY CALCULTAIONS.
+            Return ONLY the structured JSON format with numerical values. DO NOT RETURN ANY CALCULTAIONS. This is CRITICAL
             """
 
             # Get structured LLM analysis
@@ -74,6 +74,31 @@ class AIService():
 
         except Exception as e:
             #return FinancialAnalysisResult(error=f"Expense analysis failed: {str(e)}")
+            print('error: ', e)
+
+
+    def generate_expense_summary(expense):
+        try:
+            prompt = f"""
+            Given the expense propoertions {expense}. generate a short report summary essay explaining the expense report
+            """
+            summary = client.chat.completions.create(
+                messages=[
+                        {
+                                "role": "system",
+                                "content": "You're in a board meeting explaining your expense breakdown to shareholders. RETURN ONLY A STRING"
+                        },{
+                                "role": "user",
+                                "content": prompt
+                        }
+                ],
+                model='llama3-8b-8192',
+                temperature=0.2,
+                response_model=ExpenseSummary
+            )
+
+            return summary
+        except Exception as e:
             print('error: ', e)
 
 
@@ -163,20 +188,20 @@ class AIService():
             then consolidate all the ratios into a risk assessment score that shows lenders how safe it is to offer the business a loan. 
             the risk assessment score should be between 0 and 850
 
-            Return ONLY the structured JSON format with numerical values (no calculations in fields).
+            Return ONLY the structured JSON format with numerical values. DO NOT RETURN ANY CALCULTAIONS. This is CRITICAL
             """
             analysis = client.chat.completions.create(
                 messages=[
                         {
                                 "role": "system",
-                                "content": "You're a senior analysed tasked with generating a comprehensive smart profile"
+                                "content": "You're a senior analysed tasked with generating a comprehensive smart profile. RETURN ONLY A STRUCTURED JSON"
                         },{
                                 "role": "user",
                                 "content": prompt
                         }
                 ],
                 model='llama3-8b-8192',
-                temperature=0.7,
+                temperature=0.2,
                 response_model=SmartProfile
             )
             return analysis
