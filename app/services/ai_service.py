@@ -204,7 +204,7 @@ class AIService():
                 temperature=0.2,
                 response_model=SmartProfile
             )
-            return analysis
+            return analysis.dict()
         except Exception as e:
             print('error: ', e)
 
