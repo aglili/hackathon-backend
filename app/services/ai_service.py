@@ -77,7 +77,7 @@ class AIService():
             print('error: ', e)
 
 
-    def generate_expense_summary(expense):
+    def generate_expense_summary(self, expense):
         try:
             prompt = f"""
             Given the expense propoertions {expense}. generate a short report summary essay explaining the expense report
