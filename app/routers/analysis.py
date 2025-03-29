@@ -64,7 +64,7 @@ async def generate_smart_index(
    data = user.user_files[0].file_url
    try:
        # Generate smart index based on historical financial data
-       smart_index = ai_service.generate_smart_index(data)
+       smart_index = ai_service.generate_smart_profile(data)
 
        return send_data_with_info(
            data=smart_index,
