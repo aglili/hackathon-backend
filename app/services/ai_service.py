@@ -9,13 +9,17 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from app.config.settings import settings
 from app.helpers.report_types import return_report
+from fastapi import Depends
+from app.repository.reports_repository import ReportRepository
+from app.schemas.reports_schema import CreateReport
 
 client = instructor.from_groq(Groq(api_key=settings.GROQ_API_KEY))
 
 
 class AIService():
-    def __init__(self):
-        super().__init__()
+    def __init__(self,repository: ReportRepository = Depends(ReportRepository)):
+        self.repository = repository
+        super().__init__(repository)
 
     
 
@@ -49,7 +53,7 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0,
                 response_model=Expense
             )
@@ -100,7 +104,7 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.2,
                 response_model=ExpenseSummary
             )
@@ -173,7 +177,7 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.2,
                 response_model=Ratios
             )
@@ -208,7 +212,7 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.2,
                 response_model=SmartProfile
             )
@@ -242,13 +246,13 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.7,
                 response_model=ScoreImprovementRecommendations
         )
         return response
     
-    async def create_report(self, data_str: str, report_type):
+    async def create_report(self, data_str: str, report_type,user):
         data = pd.read_csv(data_str)
         report_instance = return_report(report_type, data)
 
@@ -266,6 +270,12 @@ class AIService():
                 temperature=0.7,
                 response_model=report_instance['response_model']
         )
+
+        self.repository.create(CreateReport(
+            user_id=str(user.id),
+            report_type=report_type,
+            report_data= report.dict(),
+        ))
 
         return report.dict()
     
@@ -289,7 +299,7 @@ class AIService():
                                 "content": prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.2,
                 response_model=FinancialInfo
             )
