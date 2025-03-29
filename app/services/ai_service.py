@@ -35,7 +35,7 @@ class AIService():
 
             for each of these categories, sum up how much was spent on that category
             
-            Return ONLY the structured JSON format with numerical values (no calculations in fields).
+            Return ONLY the structured JSON format with numerical values. DO NOT RETURN ANY CALCULTAIONS.
             """
 
             # Get structured LLM analysis
@@ -43,7 +43,7 @@ class AIService():
                 messages=[
                         {
                                 "role": "system",
-                                "content": "You're a senior analysed tasked with expense categorization and aggregation"
+                                "content": "You're a senior analysed tasked with expense categorization and aggregation. RETURN ONLY A STRUCTURED JSON"
                         },{
                                 "role": "user",
                                 "content": prompt
