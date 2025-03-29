@@ -117,3 +117,9 @@ class IncomeReport(BaseModel):
 
 class ExpenseSummary(BaseModel):
     summary: str = Field(..., description="Summary report of expenses")
+
+class FinancialInfo(BaseModel):
+    income: List[float] = Field(..., description="a list of the businesses revenue")
+    cash_balance: List[float] = Field(..., description="a list of the businesses cash balance")
+    expenses: List[float] = Field(..., description="a list of the businesses expenses")
+    net_profit_loss: List[float] = Field(..., description="a list of the businesses net profit or loss")

@@ -2,7 +2,7 @@ from app.services.base_service import BaseService
 from groq import Groq 
 import pandas as pd 
 import instructor
-from app.schemas.ai_schema import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations, ExpenseSummary
+from app.schemas.ai_schema import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations, ExpenseSummary, FinancialInfo
 from sklearn.ensemble import IsolationForest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -262,9 +262,41 @@ class AIService():
                                 "content": report_instance.user_prompt
                         }
                 ],
-                model='llama3-8b-8192',
+                model='llama-3.3-70b-versatile',
                 temperature=0.7,
                 response_model=report_instance['response_model']
         )
 
-        return report 
+        return report.dict()
+    
+
+    def generate_financial_info(self, data):
+        try:
+            prompt = f"""
+            given the business financial information: {data}, return a list of 
+            1. income
+            2. cash balance 
+            3. expenses
+            4. net profit/loss 
+            """
+            analysis = client.chat.completions.create(
+                messages=[
+                        {
+                                "role": "system",
+                                "content": "You're tasked with generated a list of the businesses cashflow, income, expense and profit or losses"
+                        },{
+                                "role": "user",
+                                "content": prompt
+                        }
+                ],
+                model='llama3-8b-8192',
+                temperature=0.2,
+                response_model=FinancialInfo
+            )
+
+            analysis = analysis.dict()
+            return {
+                category: sum(value) for category, value in analysis.items()
+            }
+        except Exception as e:
+            print('error: ', e)
