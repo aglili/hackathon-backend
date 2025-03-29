@@ -93,9 +93,9 @@ class AIService(BaseService):
 
 
         return {
-            "date": forecast_dates,
-            "predicted_revenue": forecast,
-            "actual_revenue": data['Revenue']
+            "date": forecast_dates.to_list(),
+            "predicted_revenue": list(forecast),
+            "actual_revenue": data['Revenue'].to_list(),
         }
 
     def generate_financial_ratios(self, data_str: str):
@@ -195,3 +195,6 @@ class AIService(BaseService):
                 response_model=ScoreImprovementRecommendations
         )
         return response
+    
+    def create_report(self, data_str: str, report_type):
+        pass 
