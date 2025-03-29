@@ -27,10 +27,13 @@ class AIService():
             Analyze this business financial data:
             {data}
             
-            Categorize expenses and calculate totals for:
-            - Weekly expenses (divide monthly figures by 4)
-            - Monthly expenses (direct figures)
-            - Quarterly expenses (multiply monthly by 3)
+            Categorize expenses uner these 4 areas
+            - Utilities
+            - Rent
+            - Payroll
+            - Equipment
+
+            for each of these categories, sum up how much was spent on that category
             
             Return ONLY the structured JSON format with numerical values (no calculations in fields).
             """
@@ -51,10 +54,23 @@ class AIService():
                 response_model=Expense
             )
 
-            #print(f'analysis: {analysis}')
+            analysis = analysis.dict()
 
-            return analysis.dict()
-        
+            total = sum(analysis.values())
+    
+            if total == 0:
+                return {
+                    category: {"amount": 0.0, "percentage": 0.0}
+                    for category in analysis
+                }
+            
+            return {
+                category: {
+                    "amount": amount,
+                    "percentage": round((amount / total) * 100, 2)
+                }
+                for category, amount in analysis.items()
+            }
 
         except Exception as e:
             #return FinancialAnalysisResult(error=f"Expense analysis failed: {str(e)}")
