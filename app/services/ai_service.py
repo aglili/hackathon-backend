@@ -2,17 +2,17 @@ from app.services.base_service import BaseService
 from groq import Groq 
 import pandas as pd 
 import instructor
-from app.schemas import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations
+from app.schemas.ai_schema import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations
 from sklearn.ensemble import IsolationForest
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
+from app.config.settings import settings
+
+client = instructor.from_groq(Groq(api_key=settings.GROQ_API_KEY))
 
 
-client = instructor.from_groq(Groq())
-
-
-class AIService(BaseService):
+class AIService():
     def __init__(self):
         super().__init__()
 
@@ -52,7 +52,8 @@ class AIService(BaseService):
 
             #print(f'analysis: {analysis}')
 
-            return analysis
+            return analysis.dict()
+        
 
         except Exception as e:
             #return FinancialAnalysisResult(error=f"Expense analysis failed: {str(e)}")
@@ -90,6 +91,7 @@ class AIService(BaseService):
         # Create DataFrame for predictions
         forecast_dates = pd.date_range(start=data.index[-1], periods=periods+1, freq='M')[1:]
         forecast_df = pd.DataFrame({'Date': forecast_dates, 'Predicted_Revenue': forecast.values})
+    
 
 
         return {
@@ -125,7 +127,7 @@ class AIService(BaseService):
                 temperature=0.2,
                 response_model=Ratios
             )
-            return analysis
+            return analysis.dict()
         except Exception as e:
             print('error: ', e)
 

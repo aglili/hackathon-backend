@@ -7,6 +7,7 @@ from jose import jwt,JWTError
 from app.config.settings import settings
 from sqlalchemy import select
 from uuid import UUID
+from sqlalchemy.orm import selectinload
 
 security = HTTPBearer()
 
@@ -62,7 +63,7 @@ async def get_current_user(
             user_id = UUID(user_id)
             
         result = await db.execute(
-            select(BusinessUser).where(BusinessUser.id == user_id)
+            select(BusinessUser).where(BusinessUser.id == user_id).options(selectinload(BusinessUser.user_files))
         )
 
         user = result.scalars().first()
