@@ -56,6 +56,8 @@ class AIService():
 
             analysis = analysis.dict()
 
+            print(analysis)
+
             total = sum(analysis.values())
     
             if total == 0:
@@ -73,7 +75,6 @@ class AIService():
             }
 
         except Exception as e:
-            #return FinancialAnalysisResult(error=f"Expense analysis failed: {str(e)}")
             print('error: ', e)
 
 
@@ -97,7 +98,7 @@ class AIService():
                 response_model=ExpenseSummary
             )
 
-            return summary.summary
+            return summary
         except Exception as e:
             print('error: ', e)
 
