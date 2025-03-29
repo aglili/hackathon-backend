@@ -250,7 +250,7 @@ class AIService():
     
     def create_report(self, data_str: str, report_type):
         data = pd.read_csv(data_str)
-        report_instance = return_report(data, report_type)
+        report_instance = return_report(report_type, data)
 
         report = client.chat.completions.create(
             messages=[
