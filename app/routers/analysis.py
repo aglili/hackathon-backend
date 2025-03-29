@@ -18,9 +18,9 @@ async def generate_expenses(
     try:
         # Generate expenses for the current month
         data_file = user.user_files[0].file_url
-        response = ai_service.generate_expense_data(data_file) 
+        response = await ai_service.generate_expense_data(data_file) 
 
-        summary = ai_service.generate_expense_summary(response)
+        summary = await ai_service.generate_expense_summary(response)
 
         return send_data_with_info(
             data={
@@ -47,7 +47,7 @@ async def forecast_revenue(
         data = user.user_files[0].file_url
 
         # Forecast future revenue
-        forecast_data = ai_service.forecast_revenue(data, periods)
+        forecast_data = await ai_service.forecast_revenue(data, periods)
 
         return send_data_with_info(
             data=forecast_data,
@@ -68,7 +68,7 @@ async def generate_smart_index(
    data = user.user_files[0].file_url
    try:
        # Generate smart index based on historical financial data
-       smart_index = ai_service.generate_smart_profile(data)
+       smart_index = await ai_service.generate_smart_profile(data)
 
        return send_data_with_info(
            data=smart_index,
@@ -89,7 +89,7 @@ async def generate_recommendations(
     data = user.user_files[0].file_url
     try:
         # Generate recommendations based on historical financial data
-        recommendations = ai_service.generate_recommendations(data)
+        recommendations = await ai_service.generate_recommendations(data)
 
         return send_data_with_info(
             data=recommendations,
@@ -111,7 +111,7 @@ async def generate_report(
     data = user.user_files[0].file_url
     try:
         # Generate report based on historical financial data and report type
-        report = ai_service.create_report(data, report_type)
+        report = await ai_service.create_report(data, report_type)
 
         return send_data_with_info(
             data=report,

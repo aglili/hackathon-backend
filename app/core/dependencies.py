@@ -48,8 +48,6 @@ async def get_current_user(
         )
 
 
-        print(payload)
-
         user_id = payload.get("id")
         if user_id is None:
             raise credentials_exception
