@@ -46,9 +46,13 @@ class Settings(BaseSettings):
     SUPABASE_KEY: str = os.getenv("SUPABASE_KEY")
     BUCKET_NAME: str = os.getenv("BUCKET_NAME")
 
+
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY")
+
     class Config:
         case_sensitive = True
         env_file = ".env"
+        extra = "ignore"
 
 
 settings = Settings()
