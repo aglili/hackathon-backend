@@ -32,3 +32,10 @@ class SmartProfile(BaseModel):
     debt_income_ratio: float = Field(description=" a score between 0 and 10 representing the debt to income ratio of the business")
     business_longevity: float = Field(description=" a score between 0 and 10 representing the potential business longevity")
     smart_save_index: float = Field(description=" a score between 0 and 850 representing the risk assessment score of the business")
+
+class ScoreImprovementRecommendations(BaseModel):
+    liquidity_management = Field(description="Improve cash flow and ensure you have enough money to cover short-term expenses.")
+    capital_structure_optimization = Field(description="Balance debt and equity to keep your business financially stable.")
+    profitability_enhancements = Field(description="Increase profits by boosting revenue and cutting unnecessary costs.")
+    operational_efficiency = Field(description="Streamline operations to reduce waste and improve productivity.")
+    debt_management_risk_control = Field(description="Manage debt wisely to avoid financial stress and ensure stability.")

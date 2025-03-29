@@ -2,7 +2,7 @@ from app.services.base_service import BaseService
 from groq import Groq 
 import pandas as pd 
 import instructor
-from app.schemas import Expense, Ratios, SmartProfile
+from app.schemas import Expense, Ratios, SmartProfile, ScoreImprovementRecommendations
 from sklearn.ensemble import IsolationForest
 import numpy as np
 import matplotlib.pyplot as plt
@@ -164,5 +164,34 @@ class AIService(BaseService):
         except Exception as e:
             print('error: ', e)
 
-    def generate_score_improvement_recommendations(self):
-        pass 
+    def generate_score_improvement_recommendations(self, data_str: str):
+        data = pd.read_csv(data_str)
+        risk_data = self.generate_financial_ratios(data)
+        prompt = f"""
+        Given the following financial ratios indicating the financial health of the business
+        {risk_data}, create a recommendation on how to improve the business's financial ratios and overall risk assessment score.
+        The recommendations should cover the following areas 
+        - Liquidity Management 
+        - Capital Structure Optimization
+        - Profitability Enhancement
+        - Operational Efficiency
+        - Debt Management & Risk Control
+        avoid using jargon and write out your recommendations for each section in a way a normal business owner would understand
+
+        Return ONLY the structured JSON format with numerical values (no calculations in fields).
+        """
+        response = client.chat.completions.create(
+            messages=[
+                        {
+                                "role": "system",
+                                "content": "You're a senior analysed tasked with creating score improvement recommendations"
+                        },{
+                                "role": "user",
+                                "content": prompt
+                        }
+                ],
+                model='llama3-8b-8192',
+                temperature=0.7,
+                response_model=ScoreImprovementRecommendations
+        )
+        return response
