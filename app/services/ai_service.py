@@ -60,16 +60,16 @@ class AIService():
 
             total = sum(analysis.values())
     
-            if total == 0:
-                return {
-                    category: {"amount": 0.0, "percentage": 0.0}
-                    for category in analysis
-                }
+            # if total == 0:
+            #     return {
+            #         category: {"amount": 0.0, "percentage": 0.0}
+            #         for category in analysis
+            #     }
             
             return {
                 category: {
-                    "amount": amount,
-                    "percentage": round((amount / total) * 100, 2)
+                    "amount": str(amount),
+                    "percentage": str(round((amount / total) * 100, 2))
                 }
                 for category, amount in analysis.items()
             }
