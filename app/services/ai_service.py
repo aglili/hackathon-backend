@@ -259,7 +259,7 @@ class AIService():
                                 "content": report_instance['system_prompt'],
                         },{
                                 "role": "user",
-                                "content": report_instance.user_prompt
+                                "content": report_instance['user_prompt']
                         }
                 ],
                 model='llama-3.3-70b-versatile',
