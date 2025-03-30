@@ -54,7 +54,7 @@ class AIService(BaseService):
                                 "content": prompt
                         }
                 ],
-                model='llama-3.1-8b-instant',
+                model='qwen-2.5-32b',
                 temperature=0,
                 response_model=Expense
             )
