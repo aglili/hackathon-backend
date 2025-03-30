@@ -52,8 +52,8 @@ class OperatingExpenses(BaseModel):
     professional_fees: float = Field(..., description="Legal, accounting, and consulting services costs")
 
 class ProfitLossStatement(BaseModel):
-    period_start: date = Field(..., description="Start date of reporting period (YYYY-MM-DD)")
-    period_end: date = Field(..., description="End date of reporting period (YYYY-MM-DD)")
+    period_start: str = Field(..., description="Start date of reporting period (YYYY-MM-DD)")
+    period_end: str = Field(..., description="End date of reporting period (YYYY-MM-DD)")
     total_revenue: float = Field(..., description="Gross sales before any deductions")
     cogs: float = Field(..., description="Direct costs of producing sold goods/services")
     gross_profit: float = Field(..., description="Revenue minus COGS (Total Revenue - COGS)")
@@ -80,7 +80,7 @@ class CashFlowStatement(BaseModel):
 
 # 3. Expense Report Schema
 class ExpenseEntry(BaseModel):
-    expense_date: date = Field(..., description="Date expense was incurred")
+    expense_date: str = Field(..., description="Date expense was incurred")
     category: str = Field(..., description="Expense type (e.g., Travel, Office Supplies)")
     description: str = Field(..., description="Detailed expense purpose")
     amount: float = Field(..., description="Expense value in base currency")
