@@ -80,7 +80,7 @@ class CashFlowStatement(BaseModel):
 
 # 3. Expense Report Schema
 class ExpenseEntry(BaseModel):
-    expense_date: date = Field(..., description="Date expense was incurred")
+    expense_date: str = Field(..., description="Date expense was incurred")
     category: str = Field(..., description="Expense type (e.g., Travel, Office Supplies)")
     description: str = Field(..., description="Detailed expense purpose")
     amount: float = Field(..., description="Expense value in base currency")
