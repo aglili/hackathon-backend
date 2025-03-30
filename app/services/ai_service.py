@@ -308,7 +308,7 @@ class AIService(BaseService):
                                 "content": prompt
                         }
                 ],
-                model='llama-3.3-70b-versatile',
+                model='qwen-2.5-32b',
                 temperature=0.2,
                 response_model=FinancialInfo
             )
