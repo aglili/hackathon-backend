@@ -90,7 +90,7 @@ async def generate_recommendations(
     data = user.user_files[0].file_url
     try:
         # Generate recommendations based on historical financial data
-        recommendations = await ai_service.generate_recommendations(data)
+        recommendations = await ai_service.generate_score_improvement_recommendations(data)
 
         return send_data_with_info(
             data=recommendations,
