@@ -251,7 +251,7 @@ class AIService(BaseService):
                 temperature=0.7,
                 response_model=ScoreImprovementRecommendations
         )
-        return response
+        return response.dict()
     
     async def create_report(self, data_str: str, report_type,user):
         try:
