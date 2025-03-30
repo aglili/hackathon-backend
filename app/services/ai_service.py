@@ -283,17 +283,20 @@ class AIService():
     def generate_financial_info(self, data):
         try:
             prompt = f"""
-            given the business financial information: {data}, return a list of 
+            given the business financial information {data}, analyse the data and consolidate it into lists for the following fields 
             1. income
             2. cash balance 
             3. expenses
             4. net profit/loss 
+
+            analyse the data and sort the values into the respective fields. if you return empty lists then you are dumb
+            AND RETURN A JSON OUTPUT ONLY ELSE YOU ARE DUMB AND DONT USE ANY TOOL CALLS
             """
             analysis = client.chat.completions.create(
                 messages=[
                         {
                                 "role": "system",
-                                "content": "You're tasked with generated a list of the businesses cashflow, income, expense and profit or losses"
+                                "content": "You're tasked with generated a list of the businesses cashflow, income, expense and profit or losses. CRITICAL RETURN A JSON OUTPUT"
                         },{
                                 "role": "user",
                                 "content": prompt
@@ -305,8 +308,15 @@ class AIService():
             )
 
             analysis = analysis.dict()
-            return {
-                category: sum(value) for category, value in analysis.items()
-            }
+            result = {}
+            for category, value in analysis.items():
+                if isinstance(value, list):
+                    result[category] = sum(value)
+                elif isinstance(value, (int, float)):
+                    result[category] = value #if it's a number, it will assign the number
+                else:
+                    result[category] = None #if it's not a list or a number, it will assign none.
+
+            return result
         except Exception as e:
             print('error: ', e)

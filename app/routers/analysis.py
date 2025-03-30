@@ -126,3 +126,24 @@ async def generate_report(
             user_msg=f"Failed to generate {report_type} report",
             error=str(e),
         )
+    
+@router.post('/financial_info')
+async def get_financial_info(
+    user: BusinessUser = Depends(get_current_user),
+    ai_service: AIService = Depends(AIService),
+):
+    try:
+        data = user.user_files[0].file_url
+        # Get financial info based on historical financial data
+        financial_info = await ai_service.generate_financial_info(data)
+
+        return send_data_with_info(
+            data=financial_info,
+            status_code=200,
+            info="AI Service fetched financial info successfully"
+        )
+    except Exception as e:
+        return internal_server_error(
+            user_msg="Failed to fetch financial info",
+            error=str(e),
+        )
