@@ -286,7 +286,7 @@ class AIService(BaseService):
             raise e
     
 
-    def generate_financial_info(self, data):
+    async def generate_financial_info(self, data):
         try:
             prompt = f"""
             given the business financial information {data}, analyse the data and consolidate it into lists for the following fields 
