@@ -6,3 +6,4 @@ class CreateReport(BaseModel):
     user_id: str
     report_type: ReportType
     report_data: dict
+    report_title: str

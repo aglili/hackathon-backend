@@ -12,11 +12,12 @@ from app.helpers.report_types import return_report
 from fastapi import Depends
 from app.repository.reports_repository import ReportsRepository
 from app.schemas.reports_schema import CreateReport
+from datetime import datetime
 
 client = instructor.from_groq(Groq(api_key=settings.GROQ_API_KEY))
 
 
-class AIService():
+class AIService(BaseService):
     def __init__(self,repository: ReportsRepository = Depends(ReportsRepository)):
         self.repository = repository
         super().__init__(repository)
@@ -253,31 +254,36 @@ class AIService():
         return response
     
     async def create_report(self, data_str: str, report_type,user):
-        data = pd.read_csv(data_str)
-        report_instance = return_report(report_type, data)
+        try:
+            data = pd.read_csv(data_str)
+            report_instance = return_report(report_type.value, data)
 
-        report = client.chat.completions.create(
-            messages=[
-                        {
-                                "role": "system",
-                                "content": report_instance['system_prompt'],
-                        },{
-                                "role": "user",
-                                "content": report_instance['user_prompt']
-                        }
-                ],
-                model='llama-3.3-70b-versatile',
-                temperature=0.7,
-                response_model=report_instance['response_model']
-        )
+            report = client.chat.completions.create(
+                messages=[
+                            {
+                                    "role": "system",
+                                    "content": report_instance['system_prompt'],
+                            },{
+                                    "role": "user",
+                                    "content": report_instance['user_prompt']
+                            }
+                    ],
+                    model='llama-3.3-70b-versatile',
+                    temperature=0.7,
+                    response_model=report_instance['response_model']
+            )
 
-        await self.repository.create(CreateReport(
-            user_id=str(user.id),
-            report_type=report_type,
-            report_data= report.dict(),
-        ))
+            await self.repository.create(CreateReport(
+                user_id=str(user.id),
+                report_type=report_type,
+                report_data= report.dict(),
+                report_title=report_type.capitalize() +" report "+ datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ))
 
-        return report.dict()
+            return report.dict()
+        except Exception as e:
+            print('error: ', e)
+            raise e
     
 
     def generate_financial_info(self, data):

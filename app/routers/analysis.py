@@ -11,6 +11,32 @@ router = APIRouter(
     tags=["AI Service"],
 )
 
+
+
+@router.post('/generate_report')
+async def generate_report(
+    report_type: ReportType,
+    user: BusinessUser = Depends(get_current_user),
+    ai_service: AIService = Depends(AIService),  
+):
+    data = user.user_files[0].file_url
+    try:
+        # Generate report based on historical financial data and report type
+        report = await ai_service.create_report(data, report_type,user)
+
+        # get id, report
+
+        return send_data_with_info(
+            data=report,
+            status_code=200,
+            info=f"AI Service generated {report_type} report successfully"
+        )
+    except Exception as e:
+        return internal_server_error(
+            user_msg=f"Failed to generate {report_type} report",
+            error=str(e),
+        )
+
 @router.post('/generate_expenses', response_class=ORJSONResponse)
 async def generate_expenses(
     user: BusinessUser = Depends(get_current_user),
